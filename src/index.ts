@@ -1,25 +1,25 @@
-import express from 'express';
-import { Request, Response } from 'express';
-import { getStatus } from './getStatus';
-import { toggleKey } from './toggleKey';
+import express, { Request, Response } from 'express';
+import { Sesame } from '../lib/sesame';
 
 export const app = express();
 const port = 3000;
 const router = express.Router();
 
-export interface ExRequest extends Request {
-  query: {
-    lockType?: string | undefined
-  }
-}
+const sesame = new Sesame()
 
-router.get('/get-status', (req: Request, res: Response) => {
-  getStatus({ res })
+router.get('/get-status', async (_: Request, res: Response) => {
+  const { code, message } = await sesame.get_status()
+  return res.status(code).send(message)
 });
 
-router.post('/toggle-key', (req: ExRequest, res: Response) => {
-  // ユーザーを追加する関数
-  toggleKey({ req, res })
+router.post('/lock', async (_: Request, res: Response) => {
+  const { code, message } = await sesame.lock_cmd()
+  return res.status(code).send(message)
+});
+
+router.post('/unlock', async (_: Request, res: Response) => {
+  const { code, message } = await sesame.unlock_cmd()
+  return res.status(code).send(message)
 });
 
 app.use('/', router);
