@@ -1,7 +1,6 @@
 import express, { Request, Response } from 'express';
 import { Line } from './lib/line';
 import { Sesame } from './lib/sesame';
-import https from 'https'
 
 export const app = express();
 const port = 3000;
